@@ -21,7 +21,7 @@
     <div class="ui horizontal divider">
       Orders
     </div>
-    <table class="ui single line celled table">
+    <table class="ui single line celled table" v-show="ocurrences === false">
       <thead>
         <tr>
           <th>Order Id</th>
@@ -39,6 +39,20 @@
         </tr>
       </tbody>
     </table>
+    <table class="ui single line celled table" v-show="ocurrences === true">
+      <thead>
+        <tr>
+          <th>Ordered Item</th>
+          <th>Ocurrences</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="order in orders">
+          <td>{{order._id.orderedItem}}</td>
+          <td>{{order.count}}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
@@ -52,6 +66,7 @@ export default {
       orders: [],
       company: '',
       address: '',
+      ocurrences: false,
     };
   },
   methods: {
@@ -59,6 +74,7 @@ export default {
       getOrdersByCompany(this.company)
       .then(response => response.json())
       .then((response) => {
+        this.ocurrences = false;
         this.orders = response;
       });
     },
@@ -66,6 +82,7 @@ export default {
       getOrdersByAddress(this.address)
       .then(response => response.json())
       .then((response) => {
+        this.ocurrences = false;
         this.orders = response;
       });
     },
@@ -73,6 +90,7 @@ export default {
       getOrdersCount()
       .then(response => response.json())
       .then((response) => {
+        this.ocurrences = true;
         this.orders = response;
       });
     },

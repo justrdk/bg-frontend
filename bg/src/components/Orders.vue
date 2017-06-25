@@ -28,6 +28,7 @@
           <th>Company Name</th>
           <th>Customer Address</th>
           <th>Ordered Item</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -36,6 +37,11 @@
           <td>{{order.companyName}}</td>
           <td>{{order.customerAddress}}</td>
           <td>{{order.orderedItem}}</td>
+          <td>
+            <div class="ui small red labeled icon button" @click="removeOrderById(order.orderId)">
+                <i class="erase icon"></i> Delete Order
+              </div>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -57,7 +63,7 @@
 </template>
 
 <script>
-import { getOrdersByCompany, getOrdersByAddress, getOrdersCount } from '../services/order';
+import { getOrdersByCompany, getOrdersByAddress, getOrdersCount, removeOrdersByOrderId } from '../services/order';
 
 export default {
   name: 'orders',
@@ -94,11 +100,18 @@ export default {
         this.orders = response;
       });
     },
+    removeOrderById(orderId) {
+      removeOrdersByOrderId(orderId)
+      .then(response => response.json())
+      .then((response) => {
+        const index = this.orders.findIndex(order => order.orderId === response.orderId);
+        this.orders.splice(index, 1);
+      });
+    },
   },
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 h1, h2 {
   font-weight: normal;
